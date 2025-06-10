@@ -8,11 +8,19 @@ import { SystemSetting } from '../system-settings/entities/system-setting.entity
 import { UsersModule } from '../users/users.module';
 import { SystemSettingsModule } from '../system-settings/system-settings.module';
 import { JwtStrategy } from './jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, SystemSetting]),
-    JwtModule.register({ secret: process.env.JWT_SECRET }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET'),
+      }),
+      inject: [ConfigService],
+    }),
     UsersModule,
     SystemSettingsModule,
   ],
