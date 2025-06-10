@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SystemSettingsService } from './system-settings.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
@@ -19,7 +19,7 @@ export class SystemSettingsController {
     };
   }
 
-  @Put()
+  @Patch()
   async update(@Body() dto: UpdateConfigDto) {
     const settings = await this.service.updateColors(dto);
     return {

@@ -17,6 +17,11 @@ export class AwsS3Service {
 
   async generateUploadUrl(type: string, ext: string) {
     const fileName = `logos/temp_upload_url_${Date.now()}.${ext}`;
+    console.log('BUCKET:', process.env.AWS_BUCKET_NAME);
+    console.log('REGION:', process.env.AWS_REGION);
+    console.log('ACCESS KEY:', process.env.AWS_ACCESS_KEY_ID);
+    console.log('SECRET:', process.env.AWS_SECRET_ACCESS_KEY);
+
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: fileName,
