@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SystemSettingsService } from './system-settings.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
@@ -30,6 +30,14 @@ export class SystemSettingsController {
         color_secondary: settings.color_secondary,
         color_tertiary: settings.color_tertiary,
       },
+    };
+  }
+
+  @Get('upload-url')
+  async getSignedUrl(@Query('type') type: string, @Query('ext') ext: string) {
+    const uploadUrl = await this.service.getSignedUrl(type, ext);
+    return {
+      upload_url: uploadUrl,
     };
   }
 }
