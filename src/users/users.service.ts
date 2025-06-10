@@ -61,6 +61,26 @@ export class UsersService {
     await this.usersRepo.save(user);
   }
 
+  findByUsername(username: string) {
+    return this.usersRepo.findOne({
+      where: { username, is_deleted: false },
+      relations: { role: true },
+    });
+  }
+
+  async getPreferences(id: string) {
+    const user = await this.findOne(id);
+    return { language: user.language, theme: user.theme };
+  }
+
+  async updatePreferences(id: string, language?: string, theme?: string) {
+    const user = await this.findOne(id);
+    if (language !== undefined) user.language = language;
+    if (theme !== undefined) user.theme = theme;
+    await this.usersRepo.save(user);
+    return { language: user.language, theme: user.theme };
+  }
+
   async toggleStatus(id: string) {
     const user = await this.findOne(id);
     user.is_active = !user.is_active;
