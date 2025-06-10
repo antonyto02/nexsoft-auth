@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { RolesService } from '../roles/roles.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UpdatePreferencesDto } from './dto/update-preferences.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('auth/users')
 export class UsersController {
   constructor(
@@ -64,5 +67,24 @@ export class UsersController {
   async remove(@Param('id') id: string) {
     await this.usersService.remove(id);
     return { message: 'Usuario eliminado correctamente' };
+  }
+
+  @Get(':id/preferences')
+  async getPreferences(@Param('id') id: string) {
+    const prefs = await this.usersService.getPreferences(id);
+    return prefs;
+  }
+
+  @Patch(':id/preferences')
+  async updatePreferences(
+    @Param('id') id: string,
+    @Body() dto: UpdatePreferencesDto,
+  ) {
+    const prefs = await this.usersService.updatePreferences(
+      id,
+      dto.language,
+      dto.theme,
+    );
+    return prefs;
   }
 }

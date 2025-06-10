@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { SystemSettingsModule } from './system-settings/system-settings.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SystemSettingsModule } from './system-settings/system-settings.module';
     RolesModule,
     SessionsModule,
     SystemSettingsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
