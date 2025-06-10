@@ -28,7 +28,6 @@ export class SystemSettingsService {
   }
 
   async getSignedUrl(type: string, ext: string) {
-    const result = await this.awsS3Service.generateUploadUrl(type, ext);
-    return result.upload_url;
+    return this.awsS3Service.generateUploadUrl(type, ext);
   }
 }
