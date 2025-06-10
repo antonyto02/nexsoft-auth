@@ -35,9 +35,10 @@ export class SystemSettingsController {
 
   @Get('upload-url')
   async getSignedUrl(@Query('type') type: string, @Query('ext') ext: string) {
-    const uploadUrl = await this.service.getSignedUrl(type, ext);
+    const result = await this.service.getSignedUrl(type, ext);
     return {
-      upload_url: uploadUrl,
+      upload_url: result.upload_url,
+      final_url: result.final_url,
     };
   }
 }
