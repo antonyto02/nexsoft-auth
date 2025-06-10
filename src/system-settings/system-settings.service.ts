@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SystemSetting } from './entities/system-setting.entity';
 import { UpdateConfigDto } from './dto/update-config.dto';
+import { AwsS3Service } from '../shared/aws-s3.service';
 
 @Injectable()
 export class SystemSettingsService {
   constructor(
     @InjectRepository(SystemSetting)
     private settingsRepo: Repository<SystemSetting>,
+    private readonly awsS3Service: AwsS3Service,
   ) {}
 
   async getConfig() {
@@ -23,5 +25,10 @@ export class SystemSettingsService {
     settings.color_tertiary = dto.color_tertiary;
     await this.settingsRepo.save(settings);
     return settings;
+  }
+
+  async getSignedUrl(type: string, ext: string) {
+    const result = await this.awsS3Service.generateUploadUrl(type, ext);
+    return result.upload_url;
   }
 }
