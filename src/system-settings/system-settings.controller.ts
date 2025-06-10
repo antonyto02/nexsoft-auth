@@ -1,0 +1,35 @@
+import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { SystemSettingsService } from './system-settings.service';
+import { UpdateConfigDto } from './dto/update-config.dto';
+
+@UseGuards(JwtAuthGuard)
+@Controller('auth/config')
+export class SystemSettingsController {
+  constructor(private readonly service: SystemSettingsService) {}
+
+  @Get()
+  async getConfig() {
+    const settings = await this.service.getConfig();
+    return settings && {
+      logo_url: settings.logo_url,
+      color_primary: settings.color_primary,
+      color_secondary: settings.color_secondary,
+      color_tertiary: settings.color_tertiary,
+    };
+  }
+
+  @Put()
+  async update(@Body() dto: UpdateConfigDto) {
+    const settings = await this.service.updateColors(dto);
+    return {
+      message: 'Configuración actualizada correctamente',
+      settings: {
+        logo_url: settings.logo_url,
+        color_primary: settings.color_primary,
+        color_secondary: settings.color_secondary,
+        color_tertiary: settings.color_tertiary,
+      },
+    };
+  }
+}

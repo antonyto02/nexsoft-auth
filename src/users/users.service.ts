@@ -31,6 +31,8 @@ export class UsersService {
       first_name: dto.first_name,
       last_name: dto.last_name,
       role,
+      theme: 'light',
+      language: 'es',
     });
     return this.usersRepo.save(user);
   }
