@@ -6,10 +6,10 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'http://localhost:5173',         // tu frontend local en desarrollo
-      'http://127.0.0.1:5173',         // IP local (lo mismo que localhost)
-      'https://nexusutd.online',       // tu dominio en producción
-      'https://app.nexusutd.online',   // subdominio para una app (por ejemplo, dashboard o mobile)
+      'http://localhost:5173', 
+      'http://127.0.0.1:5173',
+      'https://nexusutd.online',
+      'https://app.nexusutd.online',
     ],
     credentials: true, // permite enviar cookies o tokens en headers
   })
