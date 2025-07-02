@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -48,7 +57,10 @@ export class UsersController {
   }
 
   @Patch(':id/password')
-  async updatePassword(@Param('id') id: string, @Body() dto: UpdatePasswordDto) {
+  async updatePassword(
+    @Param('id') id: string,
+    @Body() dto: UpdatePasswordDto,
+  ) {
     await this.usersService.updatePassword(id, dto.new_password);
     return { message: 'Contraseña actualizada correctamente' };
   }

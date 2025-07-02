@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SystemSettingsService } from './system-settings.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
@@ -11,12 +19,14 @@ export class SystemSettingsController {
   @Get()
   async getConfig() {
     const settings = await this.service.getConfig();
-    return settings && {
-      logo_url: settings.logo_url,
-      color_primary: settings.color_primary,
-      color_secondary: settings.color_secondary,
-      color_tertiary: settings.color_tertiary,
-    };
+    return (
+      settings && {
+        logo_url: settings.logo_url,
+        color_primary: settings.color_primary,
+        color_secondary: settings.color_secondary,
+        color_tertiary: settings.color_tertiary,
+      }
+    );
   }
 
   @Patch()

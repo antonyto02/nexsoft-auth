@@ -18,7 +18,9 @@ export class SystemSettingsService {
   }
 
   async updateColors(dto: UpdateConfigDto) {
-    const settings = await this.settingsRepo.findOne({ where: { nombre: 'default' } });
+    const settings = await this.settingsRepo.findOne({
+      where: { nombre: 'default' },
+    });
     if (!settings) throw new NotFoundException('Settings not found');
     if (dto.logo_url !== undefined) {
       settings.logo_url = dto.logo_url;
