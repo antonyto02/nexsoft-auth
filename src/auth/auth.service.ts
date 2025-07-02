@@ -25,7 +25,7 @@ export class AuthService {
       relations: { role: true },
     });
     if (!user) throw new UnauthorizedException('Invalid credentials');
-    const match = await bcrypt.compare(pass, user.password);
+    const match = (await bcrypt.compare(pass, user.password)) as boolean;
     if (!match) throw new UnauthorizedException('Invalid credentials');
     if (!user.is_active) throw new UnauthorizedException('User inactive');
     return user;

@@ -24,7 +24,7 @@ export class UsersService {
   async create(dto: CreateUserDto) {
     const role = await this.rolesRepo.findOne({ where: { id: dto.role_id } });
     if (!role) throw new NotFoundException('Role not found');
-    const password = await bcrypt.hash(dto.password, 10);
+    const password: string = (await bcrypt.hash(dto.password, 10)) as string;
     const user = this.usersRepo.create({
       username: dto.username,
       password,
@@ -59,7 +59,7 @@ export class UsersService {
 
   async updatePassword(id: string, newPassword: string) {
     const user = await this.findOne(id);
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = (await bcrypt.hash(newPassword, 10)) as string;
     await this.usersRepo.save(user);
   }
 
