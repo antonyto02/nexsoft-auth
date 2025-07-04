@@ -11,7 +11,6 @@ import { SystemSettingsModule } from '../system-settings/system-settings.module'
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, SystemSetting, Session]),

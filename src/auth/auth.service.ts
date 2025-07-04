@@ -33,9 +33,17 @@ export class AuthService {
 
   async login(dto: LoginDto, req: Request) {
     const user = await this.validateUser(dto.username, dto.password);
-    const payload = { sub: user.id, username: user.username, role: user.role.name };
-    const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
-    const settings = await this.settingsRepo.findOne({ where: { nombre: 'default' } });
+    const payload = {
+      sub: user.id,
+      username: user.username,
+      role: user.role.name,
+    };
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '1h',
+    });
+    const settings = await this.settingsRepo.findOne({
+      where: { nombre: 'default' },
+    });
     await this.sessionsRepo.save(
       this.sessionsRepo.create({
         user,
