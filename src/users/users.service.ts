@@ -54,6 +54,7 @@ export class UsersService {
     user.first_name = dto.first_name;
     user.last_name = dto.last_name;
     user.role = role;
+    user.is_active = dto.is_active;
     await this.usersRepo.save(user);
   }
 

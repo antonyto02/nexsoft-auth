@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
@@ -15,4 +15,7 @@ export class UpdateUserDto {
 
   @IsUUID()
   role_id: string;
+
+  @IsBoolean()
+  is_active: boolean;
 }
