@@ -4,4 +4,5 @@ declare module 'class-validator' {
   export function IsUUID(): PropertyDecorator;
   export function MinLength(len: number): PropertyDecorator;
   export function IsOptional(): PropertyDecorator;
+  export function IsBoolean(): PropertyDecorator;
 }
