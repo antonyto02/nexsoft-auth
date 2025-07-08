@@ -30,6 +30,7 @@ export class UsersService {
       password,
       first_name: dto.first_name,
       last_name: dto.last_name,
+      company_id: dto.company_id,
       role,
       theme: 'light',
       language: 'es',
