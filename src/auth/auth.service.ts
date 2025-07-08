@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -33,6 +33,10 @@ export class AuthService {
 
   async login(dto: LoginDto, req: Request) {
     const user = await this.validateUser(dto.username, dto.password);
+    const company = await this.settingsRepo.findOne({
+      where: { id: user.company_id },
+    });
+    if (!company) throw new NotFoundException('Company not found');
     const payload = {
       sub: user.id,
       username: user.username,
@@ -63,6 +67,8 @@ export class AuthService {
         role: user.role.name,
         language: user.language,
         theme: user.theme,
+        company_id: user.company_id,
+        company_name: company.nombre,
       },
       settings: settings && {
         logo_url: settings.logo_url,
