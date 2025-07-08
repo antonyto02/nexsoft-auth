@@ -31,6 +31,9 @@ export class User {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
+  @Column()
+  company_id: string;
+
   @Column({ nullable: true })
   language: string;
 

@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -34,6 +36,7 @@ export class UsersController {
   }
 
   @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   async create(@Body() dto: CreateUserDto) {
     await this.usersService.create(dto);
     return { message: 'Usuario creado correctamente' };
