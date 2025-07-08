@@ -9,7 +9,10 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Req,
+  BadRequestException,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -37,8 +40,12 @@ export class UsersController {
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async create(@Body() dto: CreateUserDto) {
-    await this.usersService.create(dto);
+  async create(@Req() req: Request, @Body() dto: CreateUserDto) {
+    const companyId = (req.user as any)?.company_id;
+    if (!companyId) {
+      throw new BadRequestException('company_id missing in token');
+    }
+    await this.usersService.create(dto, companyId);
     return { message: 'Usuario creado correctamente' };
   }
 

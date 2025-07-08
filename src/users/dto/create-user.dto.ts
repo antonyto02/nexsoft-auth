@@ -19,7 +19,4 @@ export class CreateUserDto {
 
   @IsUUID()
   role_id: string;
-
-  @IsUUID()
-  company_id: string;
 }

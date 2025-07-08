@@ -21,7 +21,7 @@ export class UsersService {
     });
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, companyId: string) {
     const role = await this.rolesRepo.findOne({ where: { id: dto.role_id } });
     if (!role) throw new NotFoundException('Role not found');
     const password = await bcrypt.hash(dto.password, 10);
@@ -30,7 +30,7 @@ export class UsersService {
       password,
       first_name: dto.first_name,
       last_name: dto.last_name,
-      company_id: dto.company_id,
+      company_id: companyId,
       role,
       theme: 'light',
       language: 'es',
