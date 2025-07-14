@@ -13,8 +13,8 @@ export class SystemSettingsService {
     private readonly awsS3Service: AwsS3Service,
   ) {}
 
-  async getConfig() {
-    return this.settingsRepo.findOne({ where: { nombre: 'default' } });
+  async getConfig(companyId: string) {
+    return this.settingsRepo.findOne({ where: { id: companyId } });
   }
 
   async updateColors(dto: UpdateConfigDto) {

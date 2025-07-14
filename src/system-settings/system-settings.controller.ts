@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SystemSettingsService } from './system-settings.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
@@ -9,8 +18,9 @@ export class SystemSettingsController {
   constructor(private readonly service: SystemSettingsService) {}
 
   @Get()
-  async getConfig() {
-    const settings = await this.service.getConfig();
+  async getConfig(@Req() req: Request) {
+    const { companyId } = req.user as { companyId: string };
+    const settings = await this.service.getConfig(companyId);
     return (
       settings && {
         logo_url: settings.logo_url,
