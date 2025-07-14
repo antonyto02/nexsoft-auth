@@ -22,7 +22,7 @@ export class AuthService {
   async validateUser(username: string, pass: string) {
     const user = await this.usersRepo.findOne({
       where: { username, is_deleted: false },
-      relations: { role: true },
+      relations: { role: true, company: true },
     });
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const match = await bcrypt.compare(pass, user.password);
@@ -37,6 +37,7 @@ export class AuthService {
       sub: user.id,
       username: user.username,
       role: user.role.name,
+      companyId: user.company.id,
     };
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '1h',
