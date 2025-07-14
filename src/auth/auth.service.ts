@@ -60,6 +60,7 @@ export class AuthService {
         theme: user.theme,
       },
       settings: settings && {
+        company_name: settings.nombre,
         logo_url: settings.logo_url,
         color_primary: settings.color_primary,
         color_secondary: settings.color_secondary,
