@@ -11,15 +11,16 @@ export class SystemSettingsController {
   @Get()
   async getConfig() {
     const settings = await this.service.getConfig();
-    return (
-      settings && {
-        logo_url: settings.logo_url,
-        color_primary: settings.color_primary,
-        color_secondary: settings.color_secondary,
-        color_tertiary: settings.color_tertiary,
-        company_name: settings.nombre,
-      }
-    );
+    if (!settings) {
+      return {};
+    }
+    return {
+      logo_url: settings.logo_url,
+      color_primary: settings.color_primary,
+      color_secondary: settings.color_secondary,
+      color_tertiary: settings.color_tertiary,
+      company_name: settings.nombre,
+    };
   }
 
   @Patch()
