@@ -37,8 +37,9 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() dto: CreateUserDto) {
-    await this.usersService.create(dto);
+  async create(@Body() dto: CreateUserDto, @Req() req: Request) {
+    const { companyId } = req.user as { companyId: string };
+    await this.usersService.create(dto, companyId);
     return { message: 'Usuario creado correctamente' };
   }
 
