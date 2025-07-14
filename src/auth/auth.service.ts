@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
-import { SystemSetting } from '../system-settings/entities/system-setting.entity';
 import { Session } from '../sessions/entities/session.entity';
 import { LoginDto } from './dto/login.dto';
 
@@ -13,8 +12,6 @@ import { LoginDto } from './dto/login.dto';
 export class AuthService {
   constructor(
     @InjectRepository(User) private usersRepo: Repository<User>,
-    @InjectRepository(SystemSetting)
-    private settingsRepo: Repository<SystemSetting>,
     @InjectRepository(Session) private sessionsRepo: Repository<Session>,
     private jwtService: JwtService,
   ) {}
@@ -42,9 +39,7 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '1h',
     });
-    const settings = await this.settingsRepo.findOne({
-      where: { nombre: 'default' },
-    });
+    const settings = user.company;
     await this.sessionsRepo.save(
       this.sessionsRepo.create({
         user,
