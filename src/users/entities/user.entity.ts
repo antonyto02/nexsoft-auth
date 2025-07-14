@@ -32,8 +32,8 @@ export class User {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @ManyToOne(() => SystemSetting)
   @JoinColumn({ name: 'company_id' })
+  @ManyToOne(() => SystemSetting, { nullable: false, eager: true })
   company: SystemSetting;
 
   @Column({ nullable: true })
