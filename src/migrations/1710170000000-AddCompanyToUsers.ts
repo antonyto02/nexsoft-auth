@@ -42,7 +42,7 @@ export class AddCompanyToUsers1710170000000 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable('auth.users');
-    const foreignKey = table.foreignKeys.find(
+    const foreignKey = table?.foreignKeys.find(
       (fk) => fk.columnNames.indexOf('company_id') !== -1,
     );
     if (foreignKey) {
