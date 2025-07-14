@@ -14,6 +14,7 @@ export class SystemSettingsController {
     return (
       settings && {
         logo_url: settings.logo_url,
+        company_name: settings.nombre,
         color_primary: settings.color_primary,
         color_secondary: settings.color_secondary,
         color_tertiary: settings.color_tertiary,
@@ -28,6 +29,7 @@ export class SystemSettingsController {
       message: 'Configuración actualizada correctamente',
       settings: {
         logo_url: settings.logo_url,
+        company_name: settings.nombre,
         color_primary: settings.color_primary,
         color_secondary: settings.color_secondary,
         color_tertiary: settings.color_tertiary,
