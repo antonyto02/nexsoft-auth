@@ -14,9 +14,9 @@ export class UsersService {
     @InjectRepository(Role) private rolesRepo: Repository<Role>,
   ) {}
 
-  findAll() {
+  findAll(companyId: string) {
     return this.usersRepo.find({
-      where: { is_deleted: false },
+      where: { is_deleted: false, company: { id: companyId } },
       relations: { role: true },
     });
   }

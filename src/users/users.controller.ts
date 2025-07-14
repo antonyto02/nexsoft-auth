@@ -4,10 +4,12 @@ import {
   Delete,
   Get,
   Param,
+  Req,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -25,8 +27,9 @@ export class UsersController {
   ) {}
 
   @Get()
-  async findAll() {
-    const users = await this.usersService.findAll();
+  async findAll(@Req() req: Request) {
+    const { companyId } = req.user as { companyId: string };
+    const users = await this.usersService.findAll(companyId);
     return {
       message: 'Lista de usuarios obtenida correctamente',
       users,
