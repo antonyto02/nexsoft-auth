@@ -32,8 +32,9 @@ export class SystemSettingsController {
   }
 
   @Patch()
-  async update(@Body() dto: UpdateConfigDto) {
-    const settings = await this.service.updateColors(dto);
+  async update(@Req() req: Request, @Body() dto: UpdateConfigDto) {
+    const { companyId } = req.user as { companyId: string };
+    const settings = await this.service.updateColors(dto, companyId);
     return {
       message: 'Configuración actualizada correctamente',
       settings: {
@@ -41,6 +42,7 @@ export class SystemSettingsController {
         color_primary: settings.color_primary,
         color_secondary: settings.color_secondary,
         color_tertiary: settings.color_tertiary,
+        nombre: settings.nombre,
       },
     };
   }
