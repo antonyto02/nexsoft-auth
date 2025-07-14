@@ -17,6 +17,7 @@ export class SystemSettingsController {
         color_primary: settings.color_primary,
         color_secondary: settings.color_secondary,
         color_tertiary: settings.color_tertiary,
+        company_name: settings.nombre,
       }
     );
   }
@@ -31,6 +32,7 @@ export class SystemSettingsController {
         color_primary: settings.color_primary,
         color_secondary: settings.color_secondary,
         color_tertiary: settings.color_tertiary,
+        company_name: settings.nombre,
       },
     };
   }

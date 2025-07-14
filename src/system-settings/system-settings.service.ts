@@ -25,6 +25,9 @@ export class SystemSettingsService {
     if (dto.logo_url !== undefined) {
       settings.logo_url = dto.logo_url;
     }
+    if (dto.company_name !== undefined) {
+      settings.nombre = dto.company_name;
+    }
     settings.color_primary = dto.color_primary;
     settings.color_secondary = dto.color_secondary;
     settings.color_tertiary = dto.color_tertiary;
