@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -92,5 +93,19 @@ export class AuthService {
     } catch (err) {
       throw new InternalServerErrorException();
     }
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const reset = await this.passwordResetsRepo.findOne({
+      where: { token },
+      relations: { user: true },
+    });
+    if (!reset || reset.used || reset.expires_at < new Date()) {
+      throw new BadRequestException('Invalid token');
+    }
+    reset.used = true;
+    reset.user.password = await bcrypt.hash(newPassword, 10);
+    await this.usersRepo.save(reset.user);
+    await this.passwordResetsRepo.save(reset);
   }
 }
