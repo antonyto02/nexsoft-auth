@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
 import { Session } from '../sessions/entities/session.entity';
 import { PasswordReset } from '../password-resets/entities/password-reset.entity';
+import { EmailService } from '../shared/email.service';
 import { LoginDto } from './dto/login.dto';
 import { randomUUID } from 'crypto';
 
@@ -23,6 +24,7 @@ export class AuthService {
     @InjectRepository(PasswordReset)
     private passwordResetsRepo: Repository<PasswordReset>,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ) {}
 
   async validateUser(username: string, pass: string) {
@@ -87,9 +89,7 @@ export class AuthService {
       await this.passwordResetsRepo.save(
         this.passwordResetsRepo.create({ user, token, expires_at }),
       );
-      console.log(
-        `Send email to ${email}: https://nexusutd.online/reset-password?token=${token}`,
-      );
+      await this.emailService.sendPasswordResetEmail(email, token);
     } catch (err) {
       throw new InternalServerErrorException();
     }

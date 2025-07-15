@@ -11,6 +11,7 @@ import { UsersModule } from '../users/users.module';
 import { SystemSettingsModule } from '../system-settings/system-settings.module';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EmailService } from '../shared/email.service';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     SystemSettingsModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, EmailService],
   exports: [JwtModule],
 })
 export class AuthModule {}
