@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,13 +10,17 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
 import { Session } from '../sessions/entities/session.entity';
+import { PasswordReset } from '../password-resets/entities/password-reset.entity';
 import { LoginDto } from './dto/login.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private usersRepo: Repository<User>,
     @InjectRepository(Session) private sessionsRepo: Repository<Session>,
+    @InjectRepository(PasswordReset)
+    private passwordResetsRepo: Repository<PasswordReset>,
     private jwtService: JwtService,
   ) {}
 
@@ -67,5 +75,22 @@ export class AuthService {
         color_tertiary: settings.color_tertiary,
       },
     };
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.usersRepo.findOne({ where: { username: email } });
+    if (!user) return;
+    try {
+      const token = randomUUID();
+      const expires_at = new Date(Date.now() + 15 * 60 * 1000);
+      await this.passwordResetsRepo.save(
+        this.passwordResetsRepo.create({ user, token, expires_at }),
+      );
+      console.log(
+        `Send email to ${email}: https://nexusutd.online/reset-password?token=${token}`,
+      );
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
   }
 }
