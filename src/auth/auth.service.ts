@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,14 +11,20 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
 import { Session } from '../sessions/entities/session.entity';
+import { PasswordReset } from '../password-resets/entities/password-reset.entity';
+import { EmailService } from '../shared/email.service';
 import { LoginDto } from './dto/login.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private usersRepo: Repository<User>,
     @InjectRepository(Session) private sessionsRepo: Repository<Session>,
+    @InjectRepository(PasswordReset)
+    private passwordResetsRepo: Repository<PasswordReset>,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ) {}
 
   async validateUser(username: string, pass: string) {
@@ -67,5 +78,34 @@ export class AuthService {
         color_tertiary: settings.color_tertiary,
       },
     };
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.usersRepo.findOne({ where: { username: email } });
+    if (!user) return;
+    try {
+      const token = randomUUID();
+      const expires_at = new Date(Date.now() + 15 * 60 * 1000);
+      await this.passwordResetsRepo.save(
+        this.passwordResetsRepo.create({ user, token, expires_at }),
+      );
+      await this.emailService.sendPasswordResetEmail(email, token);
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const reset = await this.passwordResetsRepo.findOne({
+      where: { token },
+      relations: { user: true },
+    });
+    if (!reset || reset.used || reset.expires_at < new Date()) {
+      throw new BadRequestException('Invalid token');
+    }
+    reset.used = true;
+    reset.user.password = await bcrypt.hash(newPassword, 10);
+    await this.usersRepo.save(reset.user);
+    await this.passwordResetsRepo.save(reset);
   }
 }
