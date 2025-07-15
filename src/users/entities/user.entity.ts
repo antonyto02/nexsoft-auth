@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '../../roles/entities/role.entity';
+import { SystemSetting } from '../../system-settings/entities/system-setting.entity';
 
 @Entity({ name: 'users', schema: 'auth' })
 export class User {
@@ -30,6 +31,10 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   role: Role;
+
+  @JoinColumn({ name: 'company_id' })
+  @ManyToOne(() => SystemSetting, { nullable: false, eager: true })
+  company: SystemSetting;
 
   @Column({ nullable: true })
   language: string;

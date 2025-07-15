@@ -7,14 +7,22 @@ export class UpdateConfigDto {
   logo_url?: string;
 
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
-  color_primary: string;
+  color_primary?: string;
 
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
-  color_secondary: string;
+  color_secondary?: string;
 
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
-  color_tertiary: string;
+  color_tertiary?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  newName?: string;
 }

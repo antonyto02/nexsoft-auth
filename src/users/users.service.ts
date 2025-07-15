@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { Role } from '../roles/entities/role.entity';
+import { SystemSetting } from '../system-settings/entities/system-setting.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -12,18 +13,24 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepo: Repository<User>,
     @InjectRepository(Role) private rolesRepo: Repository<Role>,
+    @InjectRepository(SystemSetting)
+    private settingsRepo: Repository<SystemSetting>,
   ) {}
 
-  findAll() {
+  findAll(companyId: string) {
     return this.usersRepo.find({
-      where: { is_deleted: false },
+      where: { is_deleted: false, company: { id: companyId } },
       relations: { role: true },
     });
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, companyId: string) {
     const role = await this.rolesRepo.findOne({ where: { id: dto.role_id } });
     if (!role) throw new NotFoundException('Role not found');
+    const company = await this.settingsRepo.findOne({
+      where: { id: companyId },
+    });
+    if (!company) throw new NotFoundException('Company not found');
     const password = await bcrypt.hash(dto.password, 10);
     const user = this.usersRepo.create({
       username: dto.username,
@@ -31,6 +38,7 @@ export class UsersService {
       first_name: dto.first_name,
       last_name: dto.last_name,
       role,
+      company,
       theme: 'light',
       language: 'es',
     });
