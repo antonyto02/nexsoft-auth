@@ -66,6 +66,7 @@ export class AuthService {
       user: {
         id: user.id,
         username: user.username,
+        first_name: user.first_name,
         role: user.role.name,
         language: user.language,
         theme: user.theme,
